@@ -1,5 +1,7 @@
 // Code based on Sifive HIFive uart base https://wiki.osdev.org/HiFive-1_Bare_Bones
 
+#include "trace_macros.h"
+
 /* UART */
 #define UART0_CTRL_ADDR 0x54000000UL
 #define UART_REG_TXFIFO         0x00
@@ -62,9 +64,16 @@ static void uart_write_string(u8 *buf) {
 }
 
 void _init(int cid, int nc) {
-  uart_write_string("initializing...\n");
+  START_TRACE;
+  uart_write_string("aaa bbb ccc...\n");
 
+  volatile int a = 8;
+  volatile int b = 10;
+  volatile int c = a * b;
+
+  STOP_TRACE;
   for (;;);
+ 
 }
 
 //  riscv64-unknown-elf-gcc -march=rv64g -mabi=lp64 -static -mcmodel=medany -nostdlib -nostartfiles uart_test.c crt.S -lgcc -T test.ld

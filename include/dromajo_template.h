@@ -51,7 +51,7 @@
 #else
 #error unsupported XLEN
 #endif
-
+#include <limits>
 static inline intx_t glue(div, XLEN)(intx_t a, intx_t b) {
     if (b == 0) {
         return -1;
@@ -278,6 +278,7 @@ int no_inline glue(riscv_cpu_interp, XLEN)(RISCVCPUState *s, int n_cycles) {
     }
 
     s->pending_exception = -1;
+    s->last_data_vaddr = std::numeric_limits<decltype(s->last_data_vaddr)>::max();
     n_cycles++;
     /* Note: we assume NULL is represented as a zero number */
     code_ptr          = NULL;

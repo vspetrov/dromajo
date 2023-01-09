@@ -39,7 +39,7 @@
 #
 
 cmake_minimum_required(VERSION 2.8)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 project(dromajo)
 option(TRACEOS "TRACEOS" OFF)
 option(SIMPOINT "SIMPOINT" OFF)
@@ -50,7 +50,7 @@ option(WARMUP "WARMUP" OFF)
 
 add_compile_options(
         -g
-        -std=c++11
+        -std=c++17
         -g
         -Wall
         -Wno-parentheses
@@ -137,6 +137,22 @@ else ()
   target_link_libraries(dromajo dromajo_cosim)
   target_link_libraries(dromajo_cosim_test dromajo_cosim)
 endif ()
+
+################################################################################
+# STF
+set(DISABLE_STF_DOXYGEN 1)
+set(NO_STF_LTO 1)
+set(STF_LIB_BASE ${PROJECT_SOURCE_DIR}/stf_lib)
+include(${STF_LIB_BASE}/cmake/stf-config.cmake)
+
+include_directories(${STF_LIB_BASE})
+target_link_directories(dromajo PRIVATE ${STF_LIB_BASE}/build/lib)
+target_link_libraries(dromajo ${STF_LINK_LIBS})
+
+# Add STF library to the build
+add_subdirectory (${STF_LIB_BASE})
+
+################################################################################
 
 if (${CMAKE_HOST_APPLE})
     include_directories(/usr/local/include /usr/local/include/libelf)
