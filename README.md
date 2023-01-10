@@ -57,3 +57,19 @@ usage: ./dromajo [--load snapshot_name] [--save snapshot_name] [--maxinsns N] [-
 ./dromajo path/to/your/coremark.riscv
 ...
 ```
+## STF support
+To build with STF tracing support firstly one has to build Sparta/Olympia
+(see https://github.com/riscv-software-src/riscv-perf-model/)
+
+Then from top dromajo src dir:
+ln -s <riscv-perf-model-path>/stf_lib
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=debug
+
+Run example:
+cd ../run
+riscv64-unknown-elf-gcc -march=rv64g -mabi=lp64 -static -mcmodel=medany -nostdlib -nostartfiles uart_test.c crt.S -lgcc -T test.ld -I../include -o uart_test 
+
+cd -
+./dromajo --stf_trace out2.stf --stf_priv_level 3  ../run/uart_test
