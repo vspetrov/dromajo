@@ -67,13 +67,12 @@ void _init(int cid, int nc) {
   START_TRACE;
   uart_write_string("aaa bbb ccc...\n");
 
-  volatile int a = 8;
-  volatile int b = 10;
-  volatile int c = a * b;
+  volatile double a = 8.0;
+  volatile double b = 10.0;
+  volatile double c = a * b;
 
   STOP_TRACE;
   for (;;);
- 
 }
 
 //  riscv64-unknown-elf-gcc -march=rv64g -mabi=lp64 -static -mcmodel=medany -nostdlib -nostartfiles uart_test.c crt.S -lgcc -T test.ld

@@ -206,7 +206,7 @@ typedef struct VirtMachine {
     uint64_t maxinsns;
     uint64_t trace;
     const char * stf_trace = nullptr;
-
+    int          stf_priv_level;
     /* For co-simulation only, they are -1 if nothing is pending. */
     bool cosim;
     int  pending_interrupt;

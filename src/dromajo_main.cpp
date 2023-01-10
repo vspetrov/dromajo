@@ -561,6 +561,7 @@ static void usage(const char *prog, const char *msg) {
             "       --terminate-event name of the validate event to terminate execution\n"
             "       --trace start trace dump after a number of instructions. Trace disabled by default\n"
             "       --stf_trace <filename>  Dump an STF trace to the given file\n"
+            "       --stf_priv_level <int>  cpu priviledge level which gets traced (0 - user, 3 - max)\n"
             "       --ignore_sbi_shutdown continue simulation even upon seeing the SBI_SHUTDOWN call\n"
             "       --dump_memories dump memories that could be used to load a cosimulation\n"
             "       --memory_size sets the memory size in MiB (default 256 MiB)\n"
@@ -635,6 +636,7 @@ RISCVMachine *virt_machine_main(int argc, char **argv) {
     bool        custom_extension         = false;
     const char *simpoint_file            = 0;
     bool        clear_ids                = false;
+    int         stf_priv_level           = 0;
 #ifdef LIVECACHE
     uint64_t    live_cache_size          = 8*1024*1024;
 #endif
@@ -657,6 +659,7 @@ RISCVMachine *virt_machine_main(int argc, char **argv) {
             {"simpoint",                required_argument, 0,  'S' },
             {"maxinsns",                required_argument, 0,  'm' }, // CFG
             {"stf_trace",               required_argument, 0,  'z' },
+            {"stf_priv_level",          required_argument, 0,  'Z' },
             {"trace   ",                required_argument, 0,  't' },
             {"ignore_sbi_shutdown",     required_argument, 0,  'P' }, // CFG
             {"dump_memories",                 no_argument, 0,  'D' }, // CFG
@@ -739,6 +742,10 @@ RISCVMachine *virt_machine_main(int argc, char **argv) {
 
             case 'z':
                 stf_trace = strdup(optarg);
+                break;
+
+            case 'Z':
+                stf_priv_level = atoi(optarg);
                 break;
 
             case 'P': ignore_sbi_shutdown = true; break;
@@ -1066,7 +1073,7 @@ RISCVMachine *virt_machine_main(int argc, char **argv) {
     s->common.snapshot_save_name = snapshot_save_name;
     s->common.trace              = trace;
     s->common.stf_trace          = stf_trace;
-
+    s->common.stf_priv_level     = stf_priv_level;
     // Allow the command option argument to overwrite the value
     // specified in the configuration file
     if (maxinsns > 0) {

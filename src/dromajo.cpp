@@ -185,7 +185,7 @@ int iterate_core(RISCVMachine *m, int hartid) {
         {
             // Only trace in user priv and the same application that
             // started the trace
-            if((priv == 0) &&
+            if((priv <= m->common.stf_priv_level) &&
                (cpu->pending_exception == -1) &&
                (stf_prog_asid == ((cpu->satp >> 4) & 0xFFFF)))
             {
